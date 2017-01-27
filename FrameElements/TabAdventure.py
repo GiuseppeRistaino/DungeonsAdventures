@@ -42,7 +42,7 @@ class TabAdventure(QTabWidget):
         self.scene = Scene(self.numRow, self.numColumn, self.adventureName)
 
         self.buttonSave = QPushButton("Salva")
-        self.buttonLoad = QPushButton("Load")
+        #self.buttonLoad = QPushButton("Load")
 
         self.listWidget = QListWidget()
         self.listWidget.selectionModel().selectionChanged.connect(self.eventListItemWidgetSelect)
@@ -70,7 +70,7 @@ class TabAdventure(QTabWidget):
         self.buttonView.setCheckable(True)
 
         self.buttonSave.clicked.connect(self.eventButtonSave)
-        self.buttonLoad.clicked.connect(self.eventButtonLoad)
+        #self.buttonLoad.clicked.connect(self.eventButtonLoad)
         self.buttonMap.clicked.connect(self.eventButtonMap)
         self.buttonDrop.clicked.connect(self.eventButtonDrop)
         self.buttonCancel.clicked.connect(self.eventButtonCanc)
@@ -79,7 +79,7 @@ class TabAdventure(QTabWidget):
         self.buttonView.clicked.connect(self.eventButtonView)
 
         hBoxTopRight.addWidget(self.buttonSave)
-        hBoxTopRight.addWidget(self.buttonLoad)
+        #hBoxTopRight.addWidget(self.buttonLoad)
 
         hBoxBottomRight.addWidget(self.buttonCancel)
         hBoxBottomRight.addWidget(self.buttonText)
@@ -207,14 +207,14 @@ class TabAdventure(QTabWidget):
         fileDialog = QFileDialog()
         fname = fileDialog.getSaveFileName(self, 'Save file', 'c:\\', 'Map files (*.map)')
         manager = Adventure_Manager()
-        manager.save(self.scene, fname)
+        manager.save(self.scene, self.editTextEnvironment, self.editTextAdventure, fname)
 
 
     '''
     Metodo per caricare una avventura da un file .map
     per ora è stato messo in questa classe ma deve essere portato nella classe MainWindow nella quale bisognerà creare
     un opzione in più per il menu che permetta il caricamento della mappa
-    '''
+
     def eventButtonLoad(self):
         fileDialog = QFileDialog()
         fname = fileDialog.getOpenFileName(self, 'Open file', 'c:\\', 'Map files (*.map)')
@@ -247,3 +247,4 @@ class TabAdventure(QTabWidget):
         self.scene.name = adv.name
         self.scene.numColumn = adv.numColumn
         self.scene.numRow = adv.numRow
+        '''

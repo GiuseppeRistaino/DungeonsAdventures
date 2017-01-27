@@ -2,11 +2,12 @@ import sys
 import os
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
+
+from Dialogs.DialogAddNpg import DialogAddNpg
 from Elements.Rectangle import *
 from Dialogs.DialogTextOnMap import *
 from Dialogs.DialogNewDungeon import *
 from Elements.Npg import *
-from Dialogs.DialogAddNpg import *
 
 class Dungeon(QGraphicsScene):
 
@@ -51,7 +52,6 @@ class Dungeon(QGraphicsScene):
                     self.itemToDrop.setPos(coord.x()-self.itemToDrop.boundingRect().width() / 2, coord.y()-self.itemToDrop.boundingRect().height() / 2)
                     self.itemToDrop.x = coord.x()-self.itemToDrop.boundingRect().width() / 2
                     self.itemToDrop.y = coord.y()-self.itemToDrop.boundingRect().height() / 2
-        npg = self.isPointOnNpg(coord.x(), coord.y())
 
 
 
@@ -116,7 +116,8 @@ class Dungeon(QGraphicsScene):
                     self.itemToDrop.setPos(rect.boundingRect().x(), rect.boundingRect().y())
                     self.itemToDrop = None
                 else:
-                    self.itemToDrop = item
+                    if isinstance(item, Npg):
+                        self.itemToDrop = item
 
 
     def isPointOnItemRect(self, x, y):

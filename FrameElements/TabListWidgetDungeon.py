@@ -111,7 +111,6 @@ class TabListWidgetDungeon(QTabWidget):
             pathRes = self.listNpgWidget.currentItem().text()
             pixmap = elem.icon().pixmap(QSize(50, 50))
             self.parent.dungeon.itemToDraw = Npg(pixmap, pathRes=pathRes)
-            print(self.parent.dungeon.itemToDraw)
 
 
 

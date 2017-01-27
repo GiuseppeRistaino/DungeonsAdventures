@@ -43,7 +43,7 @@ class DialogNewGame(QDialog):
 
         #controllare se il numero è accettabile
         if numPlayer != "" or self.adventure is None:
-            self.frame = FrameGame(parent=self.parent, adventure=self.adventure, numPlayer=numPlayer)
+            self.frame = FrameGame(parent=self.parent, adventure=self.adventure)
             self.parent.setCentralWidget(self.frame)
             self.parent.setWindowTitle(self.adventure.name)
             self.close()

@@ -2,16 +2,19 @@ import sys
 import os
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
+
+from Dialogs.DialogAddNpg import DialogAddNpg
 from Elements.Rectangle import *
 from Dialogs.DialogTextOnMap import *
 from Dialogs.DialogNewDungeon import *
 from Dialogs.DialogViewDungeons import *
+from Dialogs.DialogAddNpg import *
 
 class Scene(QGraphicsScene):
 
     HEIGTH_RECT = 50
     WIDTH_RECT = 50
-    STATES = ["CANC", "TEXT", "MAP", "DROP", "ROTATE", "VIEW"]
+    STATES = ["CANC", "TEXT", "MAP", "DROP", "ROTATE", "VIEW", "DRAG", "INFO"]
 
     def __init__(self, numRow, numColumn, name=None, places=None):
         super(Scene, self).__init__()
@@ -22,6 +25,8 @@ class Scene(QGraphicsScene):
         self.places = places
         self.itemToDraw = None
         self.state = None
+        self.itemToDrop = None
+        self.npgs = []
 
         self.drawChess(self.numRow, self.numColumn)
 
@@ -34,23 +39,25 @@ class Scene(QGraphicsScene):
                 self.chess.append(rect)
 
     def mouseMoveEvent(self, event):
-        self.manageStateEvent(event)
-
-    def mousePressEvent(self, event):
-        self.manageStateEvent(event)
-
-    def manageStateEvent(self, event):
         coord = event.scenePos()
         rect = self.isPointOnItemRect(coord.x(), coord.y())
+        self.manageStateEvent(event, rect)
+        if isinstance(self.itemToDrop, Npg):
+            for npg in self.npgs:
+                if self.itemToDrop == npg:
+                    self.itemToDrop.setPos(coord.x()-self.itemToDrop.boundingRect().width() / 2, coord.y()-self.itemToDrop.boundingRect().height() / 2)
+                    self.itemToDrop.x = coord.x()-self.itemToDrop.boundingRect().width() / 2
+                    self.itemToDrop.y = coord.y()-self.itemToDrop.boundingRect().height() / 2
+
+    def mousePressEvent(self, event):
+        coord = event.scenePos()
+        rect = self.isPointOnItemRect(coord.x(), coord.y())
+        self.manageStateEvent(event, rect)
         if event.buttons() == Qt.RightButton:
-            if rect is not None:
-                #Disegna
-                rect.addPlace(self.itemToDraw)
-        if self.state == self.STATES[0]:
-            if event.buttons() == Qt.LeftButton:
-                if rect is not None:
-                    # Cancella
-                    rect.removeItems()
+            if isinstance(self.itemToDraw, Npg):
+                if self.isPointOnNpg(coord.x(), coord.y()) is None:
+                    self.dialog = DialogAddNpg(self, rect)
+                    self.dialog.show()
         if self.state == self.STATES[1]:
             if event.buttons() == Qt.LeftButton:
                 if rect is not None:
@@ -69,6 +76,38 @@ class Scene(QGraphicsScene):
                     # Visualizza un dungeon
                     self.dialog = DialogViewDungeons(rect)
                     self.dialog.show()
+        if self.state == self.STATES[6]:
+            if event.buttons() == Qt.LeftButton:
+                item = self.itemAt(coord.x(), coord.y())
+                if item == self.itemToDrop:
+                    self.itemToDrop.x = rect.boundingRect().x()
+                    self.itemToDrop.y = rect.boundingRect().y()
+                    self.itemToDrop.setPos(rect.boundingRect().x(), rect.boundingRect().y())
+                    self.itemToDrop = None
+                else:
+                    if isinstance(item, Npg):
+                        self.itemToDrop = item
+        if self.state == self.STATES[7]:
+            if event.buttons() == Qt.LeftButton:
+                npg = self.isPointOnNpg(coord.x(), coord.y())
+                if npg is not None:
+                    self.msg = QMessageBox()
+                    self.msg.setText(npg.name)
+                    self.msg.setWindowTitle("Info Npg")
+                    self.msg.show()
+
+    def manageStateEvent(self, event, rect=None):
+        if event.buttons() == Qt.RightButton:
+            if rect is not None:
+                #Disegna
+                if isinstance(self.itemToDraw, Place):
+                    rect.addPlace(self.itemToDraw)
+        if self.state == self.STATES[0]:
+            if event.buttons() == Qt.LeftButton:
+                if rect is not None:
+                    # Cancella
+                    rect.removeItems()
+
 
 
 
@@ -76,6 +115,12 @@ class Scene(QGraphicsScene):
         for rect in self.chess:
             if rect.boundingRect().contains(x, y):
                 return rect
+        return None
+
+    def isPointOnNpg(self, x, y):
+        for npg in self.npgs:
+            if npg.x < x < npg.x+npg.boundingRect().width() and npg.y < y < npg.y + npg.boundingRect().height():
+                return npg
         return None
 
     def deleteItems(self, rect):

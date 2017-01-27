@@ -2,13 +2,15 @@ import pickle
 
 class Adventure():
 
-    def __init__(self, name, numRow, numColumn, places=None, textes=None):
+    def __init__(self, name, numRow, numColumn, places=None, textes=None, textEnvironment=None, textAdventure=None):
         self.name = name
         self.numRow = numRow
         self.numColumn = numColumn
         #places è una lista di Place
         self.places = places
         self.textes = textes
+        self.textEnvironment = textEnvironment
+        self.textAdventure = textAdventure
 
 class Place():
     def __init__(self, x, y, pathRes, dungeons=None):
@@ -58,7 +60,7 @@ class Text():
 class Adventure_Manager():
 
 
-    def save(self, scene, fname):
+    def save(self, scene, editTextEnvironment, editTextAdventure, fname):
 
         listPlaces = []
         for place in scene.getListPlaces():
@@ -87,7 +89,7 @@ class Adventure_Manager():
             textes.append(t)
 
 
-        adv = Adventure(scene.name, scene.numRow, scene.numColumn, listPlaces, textes)
+        adv = Adventure(scene.name, scene.numRow, scene.numColumn, listPlaces, textes, editTextEnvironment.toPlainText(), editTextAdventure.toPlainText())
 
         with open(fname, 'wb') as output:
             pickle.dump(adv, output, pickle.HIGHEST_PROTOCOL)

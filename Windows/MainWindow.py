@@ -6,6 +6,7 @@ from Frames.FrameAdventure import *
 from Windows.GuideWindow import *
 from Dialogs.DialogNewAdventure import *
 from Dialogs.DialogNewGame import *
+from Database.Adventure import Adventure_Manager
 
 
 WINDOW_TITLE = "D&D"
@@ -16,7 +17,7 @@ MENU_PLAY_LOAD_GAME = "Carica Partita"
 MENU_EDITOR = "Editor"
 MENU_EDITOR_ADVENTURE = "Nuova Avventura"
 #MENU_EDITOR_SAVE_ADVENTURE = "Salva Avventura"
-#MENU_EDITOR_LOAD_ADVENTURE = "Carica Avventura"
+MENU_EDITOR_LOAD_ADVENTURE = "Carica Avventura"
 MENU_GUIDE = "Manuale"
 MENU_GUIDE_OPEN = "Apri Manuale"
 
@@ -42,7 +43,7 @@ class MainWindow(QMainWindow):
         menuEditor = menu.addMenu(MENU_EDITOR)
         menuEditor.addAction(MENU_EDITOR_ADVENTURE)
         #menuEditor.addAction(MENU_EDITOR_SAVE_ADVENTURE)
-        #menuEditor.addAction(MENU_EDITOR_LOAD_ADVENTURE)
+        menuEditor.addAction(MENU_EDITOR_LOAD_ADVENTURE)
 
         # Menu Manuale
         menuDatabase = menu.addMenu(MENU_GUIDE)
@@ -69,9 +70,51 @@ class MainWindow(QMainWindow):
         elif (textMenuBar == MENU_EDITOR_ADVENTURE):
             self.dialog = DialogNewAdventure(self)
             self.dialog.show()
+        elif (textMenuBar == MENU_EDITOR_LOAD_ADVENTURE):
+            self.load()
         elif (textMenuBar == MENU_GUIDE_OPEN):
             #visualizzare la guida in un'altra finestra a parte
             self.dialog = GuideWindow()
             self.dialog.show()
 
         print(q.text() + " is triggered")
+
+
+    def load(self):
+        fileDialog = QFileDialog()
+        fname = fileDialog.getOpenFileName(self, 'Open file', 'c:\\', 'Map files (*.map)')
+        manager = Adventure_Manager()
+        adv = manager.load(fname)
+        listPlaces = adv.places
+        places = []
+        for place in listPlaces:
+            p = Place(QPixmap(place.pathRes), x=place.x, y=place.y, pathRes=place.pathRes)
+            listDungeons = place.dungeons
+            for dungeon in listDungeons:
+                d = Dungeon(dungeon.numRow, dungeon.numColumn, dungeon.name)
+                listTerrains = dungeon.terrains
+                listItems = dungeon.items
+                listNpgs = dungeon.npgs
+                d.addTerrains(listTerrains)
+                d.addItems(listItems)
+                d.addNpgs(listNpgs)
+                p.dungeons.append(d)
+            places.append(p)
+
+        listTextes = adv.textes
+        textes = []
+        for text in listTextes:
+            t = Text(text.string, text.x, text.y)
+            textes.append(t)
+
+        self.frame = FrameAdventure(adventureName=adv.name)
+        self.setCentralWidget(self.frame)
+        self.setWindowTitle(adv.name)
+
+        self.frame.tabAdventure.scene.addPlaces(places)
+        self.frame.tabAdventure.scene.addTextes(textes)
+        self.frame.tabAdventure.scene.name = adv.name
+        self.frame.tabAdventure.scene.numColumn = adv.numColumn
+        self.frame.tabAdventure.scene.numRow = adv.numRow
+        self.frame.tabAdventure.editTextEnvironment.setText(adv.textEnvironment)
+        self.frame.tabAdventure.editTextAdventure.setText(adv.textAdventure)

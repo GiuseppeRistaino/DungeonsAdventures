@@ -12,13 +12,12 @@ from Database.Adventure import Adventure_Manager
 
 class TabGame(QTabWidget):
 
-    PATH_ICONS = "img/environment_items/"
+    PATH_ICONS = "img/npg/"
 
-    def __init__(self, adventure, numPlayer, parent=None):
+    def __init__(self, adventure, parent=None):
         super(TabGame, self).__init__(parent)
         self.parent = parent
         self.adventure = adventure
-        self.numPlayer = numPlayer
 
         self.scene = None
 
@@ -32,9 +31,9 @@ class TabGame(QTabWidget):
         self.addTab(self.tab1, "Mappa")
         self.addTab(self.tab2, "Ambientazione")
         self.addTab(self.tab3, "Avventura")
-        self.addTab(self.tabPlayer1, "Giocatore 1")
-        self.addTab(self.tabPlayer2, "Giocatore 2")
-        self.addTab(self.tabPlayer3, "Giocatore 3")
+
+        self.editTextAdventure = QTextEdit()
+        self.editTextEnvironment = QTextEdit()
 
         self.tab1UI()
         self.tab2UI()
@@ -68,7 +67,11 @@ class TabGame(QTabWidget):
         self.scene = Scene(adv.numRow, adv.numColumn, adv.name)
         self.scene.addPlaces(places)
         self.scene.addTextes(textes)
-
+        self.scene.name = adv.name
+        self.scene.numColumn = adv.numColumn
+        self.scene.numRow = adv.numRow
+        self.editTextEnvironment.setText(adv.textEnvironment)
+        self.editTextAdventure.setText(adv.textAdventure)
 
     def tab1UI(self):
         vbox = QVBoxLayout()
@@ -80,7 +83,7 @@ class TabGame(QTabWidget):
         self.loadScene(self.adventure)
 
         self.buttonSave = QPushButton("Salva")
-        self.buttonLoad = QPushButton("Load")
+        #self.buttonLoad = QPushButton("Load")
 
         self.listWidget = QListWidget()
         self.listWidget.selectionModel().selectionChanged.connect(self.eventListItemWidgetSelect)
@@ -91,39 +94,44 @@ class TabGame(QTabWidget):
         self.buttonText = QPushButton()
         self.buttonMap = QPushButton()
         self.buttonDrop = QPushButton()
-        self.buttonRotate = QPushButton()
+        self.buttonDrag = QPushButton()
+        self.buttonInfo = QPushButton()
         self.buttonView = QPushButton()
         self.buttonCancel.setIcon(QIcon(QPixmap("img/icon_cancel.png")))
         self.buttonText.setIcon(QIcon(QPixmap("img/icon_text.png")))
         self.buttonMap.setIcon(QIcon(QPixmap("img/icon_map.png")))
         self.buttonDrop.setIcon(QIcon(QPixmap("img/icon_drop.png")))
-        self.buttonRotate.setIcon(QIcon(QPixmap("img/icon_rotate.png")))
+        self.buttonDrag.setText("Drag")
+        self.buttonInfo.setText("Info")
         self.buttonView.setText("View Map")
 
         self.buttonMap.setCheckable(True)
         self.buttonDrop.setCheckable(True)
         self.buttonCancel.setCheckable(True)
         self.buttonText.setCheckable(True)
-        self.buttonRotate.setCheckable(True)
+        self.buttonDrag.setCheckable(True)
+        self.buttonInfo.setCheckable(True)
         self.buttonView.setCheckable(True)
 
         self.buttonSave.clicked.connect(self.eventButtonSave)
-        self.buttonLoad.clicked.connect(self.eventButtonLoad)
+        #self.buttonLoad.clicked.connect(self.eventButtonLoad)
         self.buttonMap.clicked.connect(self.eventButtonMap)
         self.buttonDrop.clicked.connect(self.eventButtonDrop)
         self.buttonCancel.clicked.connect(self.eventButtonCanc)
         self.buttonText.clicked.connect(self.eventButtonText)
-        self.buttonRotate.clicked.connect(self.eventButtonRotate)
+        self.buttonDrag.clicked.connect(self.eventButtonDrag)
+        self.buttonInfo.clicked.connect(self.eventButtonInfo)
         self.buttonView.clicked.connect(self.eventButtonView)
 
         hBoxTopRight.addWidget(self.buttonSave)
-        hBoxTopRight.addWidget(self.buttonLoad)
+        #hBoxTopRight.addWidget(self.buttonLoad)
 
         hBoxBottomRight.addWidget(self.buttonCancel)
         hBoxBottomRight.addWidget(self.buttonText)
         hBoxBottomRight.addWidget(self.buttonMap)
         hBoxBottomRight.addWidget(self.buttonDrop)
-        hBoxBottomRight.addWidget(self.buttonRotate)
+        hBoxBottomRight.addWidget(self.buttonDrag)
+        hBoxBottomRight.addWidget(self.buttonInfo)
         hBoxBottomRight.addWidget(self.buttonView)
 
         vboxRight.addLayout(hBoxTopRight)
@@ -158,7 +166,7 @@ class TabGame(QTabWidget):
         for elem in self.listWidget.selectedItems():
             path = self.listWidget.currentItem().text()
             pixmap = elem.icon().pixmap(QSize(50, 50))
-            self.scene.itemToDraw = Place(pixmap, pathRes=path)
+            self.scene.itemToDraw = Npg(pixmap, pathRes=path)
 
     def eventButtonMap(self):
         self.checkButton(self.buttonMap)
@@ -184,10 +192,16 @@ class TabGame(QTabWidget):
         self.scene.state = self.scene.STATES[1]
         self.setCursor(QCursor(Qt.IBeamCursor))
 
-    def eventButtonRotate(self):
+    def eventButtonDrag(self):
         self.view.setDragMode(False)
-        self.checkButton(self.buttonRotate)
-        self.scene.state = self.scene.STATES[4]
+        self.checkButton(self.buttonDrag)
+        self.scene.state = self.scene.STATES[6]
+        self.setCursor(QCursor(Qt.ArrowCursor))
+
+    def eventButtonInfo(self):
+        self.view.setDragMode(False)
+        self.checkButton(self.buttonInfo)
+        self.scene.state = self.scene.STATES[7]
         self.setCursor(QCursor(Qt.ArrowCursor))
 
     def eventButtonView(self):
@@ -201,7 +215,8 @@ class TabGame(QTabWidget):
         self.buttonMap.setChecked(False)
         self.buttonText.setChecked(False)
         self.buttonCancel.setChecked(False)
-        self.buttonRotate.setChecked(False)
+        self.buttonDrag.setChecked(False)
+        self.buttonInfo.setChecked(False)
         self.buttonView.setChecked(False)
         self.scene.state = None
 
@@ -213,7 +228,6 @@ class TabGame(QTabWidget):
     def tab2UI(self):
         vBox = QVBoxLayout()
 
-        self.editTextEnvironment = QTextEdit()
         self.editTextEnvironment.setLineWrapMode(QTextEdit.WidgetWidth)
 
         font = QFont("Times", 12, QFont.Normal, True)
@@ -228,7 +242,6 @@ class TabGame(QTabWidget):
     def tab3UI(self):
         vBox = QVBoxLayout()
 
-        self.editTextAdventure = QTextEdit()
         self.editTextAdventure.setLineWrapMode(QTextEdit.WidgetWidth)
 
         font = QFont("Times", 12, QFont.Normal, True)
@@ -255,7 +268,7 @@ class TabGame(QTabWidget):
         fileDialog = QFileDialog()
         fname = fileDialog.getSaveFileName(self, 'Save file', 'c:\\', 'Map files (*.map)')
         manager = Adventure_Manager()
-        manager.save(self.scene, fname)
+        manager.save(self.scene, self.editTextEnvironment, self.editTextAdventure,fname)
 
 
     '''

@@ -7,11 +7,10 @@ from FrameElements.TabGame import *
 
 class FrameGame(QFrame):
 
-    def __init__(self, parent, adventure, numPlayer):
+    def __init__(self, parent, adventure):
         super(FrameGame, self).__init__(parent)
         self.parent = parent
         self.adventure = adventure
-        self.numPlayer = numPlayer
         layout = QHBoxLayout()
 
         #Scene
@@ -22,7 +21,7 @@ class FrameGame(QFrame):
         #layout.addWidget(self.view)
 
         #List Widget Place
-        self.tabGame = TabGame(self.adventure, self.numPlayer, self)
+        self.tabGame = TabGame(self.adventure, self)
 
         layout.addWidget(self.tabGame)
 
