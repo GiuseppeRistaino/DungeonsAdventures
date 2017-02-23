@@ -1,6 +1,4 @@
-import sys
 from PyQt4.QtGui import *
-from PyQt4.QtCore import *
 from Frames.GuideFrame import GuideFrame
 from Frames.GuideFrameItem import GuideFrameItem
 from Database.DB_Manager import DB_Manager
@@ -11,7 +9,7 @@ class GuideWindow(QMainWindow):
 
     DB_NAME = "Database/Dungeons&Dragons.db"
 
-    STATE = ["Ability", "Weapon", "Magic", "Ingredient", "Monster", "Item", "Potion", "Talent"]
+    STATE = ("Ability", "Weapon", "Magic", "Ingredient", "Monster", "Item", "Potion", "Talent")
 
     def __init__(self):
         super(GuideWindow, self).__init__()
@@ -61,4 +59,3 @@ class GuideWindow(QMainWindow):
     #Event Listener per il pulsante di ritorno nel frame GuideFrameItem
     def buttonReturnClicked(self):
         self.showFrameGuide(self.mainFrame.state)
-

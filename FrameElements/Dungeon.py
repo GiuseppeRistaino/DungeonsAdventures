@@ -1,8 +1,3 @@
-import sys
-import os
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
-
 from Dialogs.DialogAddNpg import DialogAddNpg
 from Elements.Rectangle import *
 from Dialogs.DialogTextOnMap import *
@@ -13,7 +8,7 @@ class Dungeon(QGraphicsScene):
 
     HEIGTH_RECT = 50
     WIDTH_RECT = 50
-    STATES = ["CANC", "TEXT", "MAP", "DROP", "ROTATE", "DRAG", "INFO"]
+    STATES = ("CANC", "TEXT", "MAP", "DROP", "ROTATE", "DRAG", "INFO")
 
     def __init__(self, numRow, numColumn, name=None):
         super(Dungeon, self).__init__()

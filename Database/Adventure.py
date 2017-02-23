@@ -1,5 +1,6 @@
 import pickle
 
+
 class Adventure():
 
     def __init__(self, name, numRow, numColumn, places=None, textes=None, textEnvironment=None, textAdventure=None):
@@ -58,8 +59,6 @@ class Text():
 
 
 class Adventure_Manager():
-
-
     def save(self, scene, editTextEnvironment, editTextAdventure, fname):
 
         listPlaces = []

@@ -1,8 +1,6 @@
-import sys
-import os
 from PyQt4.QtGui import *
-from PyQt4.QtCore import *
 from Windows.EditorDungeonWindow import EditorDungeonWindow
+
 
 class DialogViewDungeons(QDialog):
 
@@ -25,7 +23,6 @@ class DialogViewDungeons(QDialog):
         vbox.addWidget(self.listWidget)
 
         self.listWidget.itemClicked.connect(self.eventClickListWidget)
-
         self.setLayout(vbox)
 
 
@@ -38,4 +35,3 @@ class DialogViewDungeons(QDialog):
         self.editorMapWindow = EditorDungeonWindow(self.scene.name, self.rect, self.scene.numRow, self.scene.numColumn, self.scene)
         self.editorMapWindow.show()
         self.close()
-        #self.scene.drawChess(self.scene.numRaw, self.scene.numColumn)

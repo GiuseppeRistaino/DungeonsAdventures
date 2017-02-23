@@ -1,7 +1,5 @@
-import sys
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
 from Frames.FrameDungeon import *
+
 
 class EditorDungeonWindow(QMainWindow):
 
@@ -12,13 +10,6 @@ class EditorDungeonWindow(QMainWindow):
         self.rect = rect
         self.dungeon = dungeon
         self.frame = FrameDungeon(self.mapName, self.rect, numRow, numColumn, self, self.dungeon)
-
-        #self.sceneParent = sceneParent
-
-        #self.frame.buttonSave.clicked.connect(self.eventButtonSave)
-        #self.graphicsRectangle = graphicsRectangle
-
-        #self.setCentralWidget(self.frame)
 
         self.setWindowTitle(mapName)
 
@@ -32,6 +23,3 @@ class EditorDungeonWindow(QMainWindow):
 
     def closeEvent(self, event):
         self.rect.addNewDungeon(self.frame.dungeon)
-
-
-

@@ -1,13 +1,8 @@
-import sys
-import os
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
-from Frames.FrameAdventure import *
 from Windows.GuideWindow import *
 from Dialogs.DialogNewAdventure import *
 from Dialogs.DialogNewGame import *
 from Database.Adventure import Adventure_Manager
-
+from Windows.Progressbar import *
 
 WINDOW_TITLE = "D&D"
 
@@ -21,15 +16,11 @@ MENU_EDITOR_LOAD_ADVENTURE = "Carica Avventura"
 MENU_GUIDE = "Manuale"
 MENU_GUIDE_OPEN = "Apri Manuale"
 
+
 class MainWindow(QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__()
-
-        #self.frame = FrameAdventure(self)
-
-        #self.setCentralWidget(self.frame)
-
         #Elementi da aggiungere alla finestra principale
         # 1 - Menu
         menu = self.menuBar()
@@ -60,8 +51,6 @@ class MainWindow(QMainWindow):
         textMenuBar = q.text()
         if (textMenuBar == MENU_PLAY_NEW_GAME):
             #Visualizzare un dialog...prima del seguente frame
-            #self.centralWidget.addWidget(self.framePlay)
-            #self.centralWidget.setCurrentWidget(self.framePlay)
             self.dialog = DialogNewGame(self)
             self.dialog.show()
         elif (textMenuBar == MENU_PLAY_LOAD_GAME):
@@ -81,40 +70,56 @@ class MainWindow(QMainWindow):
 
 
     def load(self):
-        fileDialog = QFileDialog()
-        fname = fileDialog.getOpenFileName(self, 'Open file', 'c:\\', 'Map files (*.map)')
-        manager = Adventure_Manager()
-        adv = manager.load(fname)
-        listPlaces = adv.places
-        places = []
-        for place in listPlaces:
-            p = Place(QPixmap(place.pathRes), x=place.x, y=place.y, pathRes=place.pathRes)
-            listDungeons = place.dungeons
-            for dungeon in listDungeons:
-                d = Dungeon(dungeon.numRow, dungeon.numColumn, dungeon.name)
-                listTerrains = dungeon.terrains
-                listItems = dungeon.items
-                listNpgs = dungeon.npgs
-                d.addTerrains(listTerrains)
-                d.addItems(listItems)
-                d.addNpgs(listNpgs)
-                p.dungeons.append(d)
-            places.append(p)
+        try:
+            fileDialog = QFileDialog()
+            fname = fileDialog.getOpenFileName(self, 'Open file', 'c:\\', 'Map files (*.map)')
+            manager = Adventure_Manager()
+            adv = manager.load(fname)
+            listPlaces = adv.places
+            places = []
 
-        listTextes = adv.textes
-        textes = []
-        for text in listTextes:
-            t = Text(text.string, text.x, text.y)
-            textes.append(t)
+            if fname is not None:
+                value = len(listPlaces)
+                self.Dialog = QtGui.QDialog()
+                self.dialog = Ui_Dialog(self.Dialog, value)
+                self.Dialog.show()
+                for self.i in range(0,value):
+                    self.dialog.update_progressbar(self.i)
+                    time.sleep(0.001)
 
-        self.frame = FrameAdventure(adventureName=adv.name)
-        self.setCentralWidget(self.frame)
-        self.setWindowTitle(adv.name)
+            for place in listPlaces:
+                p = Place(QPixmap(place.pathRes), x=place.x, y=place.y, pathRes=place.pathRes)
+                listDungeons = place.dungeons
+                for dungeon in listDungeons:
+                    d = Dungeon(dungeon.numRow, dungeon.numColumn, dungeon.name)
+                    listTerrains = dungeon.terrains
+                    listItems = dungeon.items
+                    listNpgs = dungeon.npgs
+                    d.addTerrains(listTerrains)
+                    d.addItems(listItems)
+                    d.addNpgs(listNpgs)
+                    p.dungeons.append(d)
+                places.append(p)
 
-        self.frame.tabAdventure.scene.addPlaces(places)
-        self.frame.tabAdventure.scene.addTextes(textes)
-        self.frame.tabAdventure.scene.name = adv.name
-        self.frame.tabAdventure.scene.numColumn = adv.numColumn
-        self.frame.tabAdventure.scene.numRow = adv.numRow
-        self.frame.tabAdventure.editTextEnvironment.setText(adv.textEnvironment)
-        self.frame.tabAdventure.editTextAdventure.setText(adv.textAdventure)
+            listTextes = adv.textes
+            textes = []
+            for text in listTextes:
+                t = Text(text.string, text.x, text.y)
+                textes.append(t)
+
+            self.frame = FrameAdventure(adventureName=adv.name)
+            self.setCentralWidget(self.frame)
+            self.setWindowTitle(adv.name)
+
+            self.frame.tabAdventure.scene.addPlaces(places)
+            self.frame.tabAdventure.scene.addTextes(textes)
+            self.frame.tabAdventure.scene.name = adv.name
+            self.frame.tabAdventure.scene.numColumn = adv.numColumn
+            self.frame.tabAdventure.scene.numRow = adv.numRow
+            self.frame.tabAdventure.editTextEnvironment.setText(adv.textEnvironment)
+            self.frame.tabAdventure.editTextAdventure.setText(adv.textAdventure)
+            self.Dialog.close()
+
+        except AttributeError:
+            print("Con Questo File alcune variabili non si inizializzano correttamente")
+            self.Dialog.close()

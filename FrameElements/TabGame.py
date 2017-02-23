@@ -1,11 +1,8 @@
-import sys
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+import time
 from FrameElements.Scene import *
 from FrameElements.MyGraphicsView import *
 from Elements.Place import *
 from FrameElements.Dungeon import *
-from Database.DB_Manager import DB_Manager_Adventure
 from Database.Adventure import Adventure_Manager
 #from Database.MapStorage import *
 

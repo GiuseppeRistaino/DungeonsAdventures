@@ -1,7 +1,3 @@
-import sys
-import os
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
 from FrameElements.Scene import *
 from FrameElements.TabGame import *
 
@@ -12,13 +8,6 @@ class FrameGame(QFrame):
         self.parent = parent
         self.adventure = adventure
         layout = QHBoxLayout()
-
-        #Scene
-        #scene = Scene(50, 50, "asjda")
-        #self.view = MyGraphicsView()
-        #self.view.setScene(self.scene)
-
-        #layout.addWidget(self.view)
 
         #List Widget Place
         self.tabGame = TabGame(self.adventure, self)

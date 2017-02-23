@@ -1,13 +1,10 @@
-import sys
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
 from FrameElements.Scene import *
 from FrameElements.MyGraphicsView import *
 from Elements.Place import *
 from FrameElements.Dungeon import *
 from Database.DB_Manager import DB_Manager_Adventure
 from Database.Adventure import Adventure_Manager
-#from Database.MapStorage import *
+
 
 
 class TabAdventure(QTabWidget):
@@ -30,7 +27,6 @@ class TabAdventure(QTabWidget):
         self.tab1UI()
         self.tab2UI()
         self.tab3UI()
-        #self.setWindowTitle("tab demo")
 
     def tab1UI(self):
         vbox = QVBoxLayout()
@@ -42,13 +38,12 @@ class TabAdventure(QTabWidget):
         self.scene = Scene(self.numRow, self.numColumn, self.adventureName)
 
         self.buttonSave = QPushButton("Salva")
-        #self.buttonLoad = QPushButton("Load")
+
 
         self.listWidget = QListWidget()
         self.listWidget.selectionModel().selectionChanged.connect(self.eventListItemWidgetSelect)
         self.populateListWidget()
 
-        #Widget del layout hBoxBottomRight
         self.buttonCancel = QPushButton()
         self.buttonText = QPushButton()
         self.buttonMap = QPushButton()
@@ -208,43 +203,3 @@ class TabAdventure(QTabWidget):
         fname = fileDialog.getSaveFileName(self, 'Save file', 'c:\\', 'Map files (*.map)')
         manager = Adventure_Manager()
         manager.save(self.scene, self.editTextEnvironment, self.editTextAdventure, fname)
-
-
-    '''
-    Metodo per caricare una avventura da un file .map
-    per ora è stato messo in questa classe ma deve essere portato nella classe MainWindow nella quale bisognerà creare
-    un opzione in più per il menu che permetta il caricamento della mappa
-
-    def eventButtonLoad(self):
-        fileDialog = QFileDialog()
-        fname = fileDialog.getOpenFileName(self, 'Open file', 'c:\\', 'Map files (*.map)')
-        manager = Adventure_Manager()
-        adv = manager.load(fname)
-        listPlaces = adv.places
-        places = []
-        for place in listPlaces:
-            p = Place(QPixmap(place.pathRes), x=place.x, y=place.y, pathRes=place.pathRes)
-            listDungeons = place.dungeons
-            for dungeon in listDungeons:
-                d = Dungeon(dungeon.numRow, dungeon.numColumn, dungeon.name)
-                listTerrains = dungeon.terrains
-                listItems = dungeon.items
-                listNpgs = dungeon.npgs
-                d.addTerrains(listTerrains)
-                d.addItems(listItems)
-                d.addNpgs(listNpgs)
-                p.dungeons.append(d)
-            places.append(p)
-
-        listTextes = adv.textes
-        textes = []
-        for text in listTextes:
-            t = Text(text.string, text.x, text.y)
-            textes.append(t)
-
-        self.scene.addPlaces(places)
-        self.scene.addTextes(textes)
-        self.scene.name = adv.name
-        self.scene.numColumn = adv.numColumn
-        self.scene.numRow = adv.numRow
-        '''

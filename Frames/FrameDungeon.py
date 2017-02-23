@@ -1,7 +1,3 @@
-import sys
-import os
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
 from FrameElements.Dungeon import Dungeon
 from FrameElements.MyGraphicsView import MyGraphicsView
 from FrameElements.TabListWidgetDungeon import *
@@ -64,8 +60,6 @@ class FrameDungeon(QFrame):
         self.buttonDrag.setCheckable(True)
         self.buttonInfo.setCheckable(True)
 
-        #self.buttonSave.clicked.connect(self.eventButtonSave)
-        #self.buttonLoad.clicked.connect(self.eventButtonLoad)
         self.buttonDrop.clicked.connect(self.eventButtonDrop)
         self.buttonCancel.clicked.connect(self.eventButtonCanc)
         self.buttonText.clicked.connect(self.eventButtonText)
