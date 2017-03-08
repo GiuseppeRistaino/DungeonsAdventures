@@ -97,6 +97,7 @@ class Scene(QGraphicsScene):
                     self.msg.show()
 
     def manageStateEvent(self, event, rect=None):
+        coord = event.scenePos()
         if event.buttons() == Qt.RightButton:
             if rect is not None:
                 #Disegna
@@ -107,6 +108,12 @@ class Scene(QGraphicsScene):
                 if rect is not None:
                     # Cancella
                     rect.removeItems()
+                item = self.itemAt(coord.x(), coord.y())
+                if isinstance(item, Npg):
+                    for npg in self.npgs:
+                        if npg == item:
+                            self.npgs.remove(npg)
+                            self.removeItem(npg)
 
 
 

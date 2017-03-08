@@ -1,5 +1,9 @@
 import sys
 import os
+
+import time
+from PyQt4 import QtGui,QtCore
+from Windows.Progressbar import *
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 from Frames.FrameAdventure import *
@@ -87,9 +91,24 @@ class MainWindow(QMainWindow):
         adv = manager.load(fname)
         listPlaces = adv.places
         places = []
+
+        value = len(listPlaces)
+        for place in listPlaces:
+            listDungeons = place.dungeons
+            value += len(listDungeons)
+
+        self.Dialog = QtGui.QDialog()
+        self.dialog = Ui_Dialog(self.Dialog, value)
+        self.Dialog.show()
+
+        count = 0
         for place in listPlaces:
             p = Place(QPixmap(place.pathRes), x=place.x, y=place.y, pathRes=place.pathRes)
+
             listDungeons = place.dungeons
+            self.dialog.update_progressbar(count)
+            time.sleep(0.001)
+
             for dungeon in listDungeons:
                 d = Dungeon(dungeon.numRow, dungeon.numColumn, dungeon.name)
                 listTerrains = dungeon.terrains
@@ -99,6 +118,12 @@ class MainWindow(QMainWindow):
                 d.addItems(listItems)
                 d.addNpgs(listNpgs)
                 p.dungeons.append(d)
+
+                self.dialog.update_progressbar(count)
+                count += 1
+                time.sleep(0.001)
+
+            count += 1
             places.append(p)
 
         listTextes = adv.textes
@@ -118,3 +143,4 @@ class MainWindow(QMainWindow):
         self.frame.tabAdventure.scene.numRow = adv.numRow
         self.frame.tabAdventure.editTextEnvironment.setText(adv.textEnvironment)
         self.frame.tabAdventure.editTextAdventure.setText(adv.textAdventure)
+        self.Dialog.close()
