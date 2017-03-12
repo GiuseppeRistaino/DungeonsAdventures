@@ -55,12 +55,14 @@ class TabAdventure(QTabWidget):
         self.buttonDrop = QPushButton()
         self.buttonRotate = QPushButton()
         self.buttonView = QPushButton()
+        self.buttonCapture = QPushButton()
         self.buttonCancel.setIcon(QIcon(QPixmap("img/icon_cancel.png")))
         self.buttonText.setIcon(QIcon(QPixmap("img/icon_text.png")))
         self.buttonMap.setIcon(QIcon(QPixmap("img/icon_map.png")))
         self.buttonDrop.setIcon(QIcon(QPixmap("img/icon_drop.png")))
         self.buttonRotate.setIcon(QIcon(QPixmap("img/icon_rotate.png")))
         self.buttonView.setText("View Map")
+        self.buttonCapture.setText("Foto")
 
         self.buttonMap.setCheckable(True)
         self.buttonDrop.setCheckable(True)
@@ -77,6 +79,7 @@ class TabAdventure(QTabWidget):
         self.buttonText.clicked.connect(self.eventButtonText)
         self.buttonRotate.clicked.connect(self.eventButtonRotate)
         self.buttonView.clicked.connect(self.eventButtonView)
+        self.buttonCapture.clicked.connect(self.eventButtonCapture)
 
         hBoxTopRight.addWidget(self.buttonSave)
         #hBoxTopRight.addWidget(self.buttonLoad)
@@ -87,6 +90,7 @@ class TabAdventure(QTabWidget):
         hBoxBottomRight.addWidget(self.buttonDrop)
         hBoxBottomRight.addWidget(self.buttonRotate)
         hBoxBottomRight.addWidget(self.buttonView)
+        hBoxBottomRight.addWidget(self.buttonCapture)
 
         vboxRight.addLayout(hBoxTopRight)
         vboxRight.addWidget(self.listWidget)
@@ -151,6 +155,13 @@ class TabAdventure(QTabWidget):
         self.checkButton(self.buttonRotate)
         self.scene.state = self.scene.STATES[4]
         self.setCursor(QCursor(Qt.ArrowCursor))
+
+    def eventButtonCapture(self):
+        fileName = "map.png"
+        print(fileName)
+        pixMap = QPixmap()
+        pixMap.grabWidget(self.view)
+        pixMap.save(fileName)
 
     def eventButtonView(self):
         self.view.setDragMode(False)
