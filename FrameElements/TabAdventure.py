@@ -157,11 +157,11 @@ class TabAdventure(QTabWidget):
         self.setCursor(QCursor(Qt.ArrowCursor))
 
     def eventButtonCapture(self):
-        fileName = "map.png"
-        print(fileName)
-        pixMap = QPixmap()
-        pixMap.grabWidget(self.view)
-        pixMap.save(fileName)
+        pixMap = QPixmap(self.view.width(), self.view.height())
+        painter = QPainter(pixMap)
+        self.view.render(painter)
+        pixMap.save("map.jpg", "JPG")
+        painter.end()
 
     def eventButtonView(self):
         self.view.setDragMode(False)
