@@ -14,7 +14,7 @@ class Scene(QGraphicsScene):
 
     HEIGTH_RECT = 50
     WIDTH_RECT = 50
-    STATES = ["CANC", "TEXT", "MAP", "DROP", "ROTATE", "VIEW", "DRAG", "INFO"]
+    STATES = ["CANC", "TEXT", "MAP", "DROP", "ROTATE", "VIEW", "DRAG", "INFO", "SELECT"]
 
     def __init__(self, numRow, numColumn, name=None, places=None):
         super(Scene, self).__init__()
@@ -95,6 +95,7 @@ class Scene(QGraphicsScene):
                     self.msg.setText(npg.name)
                     self.msg.setWindowTitle("Info Npg")
                     self.msg.show()
+
 
     def manageStateEvent(self, event, rect=None):
         coord = event.scenePos()

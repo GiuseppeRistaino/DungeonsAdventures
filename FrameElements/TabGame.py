@@ -97,6 +97,8 @@ class TabGame(QTabWidget):
         self.buttonDrag = QPushButton()
         self.buttonInfo = QPushButton()
         self.buttonView = QPushButton()
+        self.buttonSelect = QPushButton()
+        self.buttonCapture = QPushButton()
         self.buttonCancel.setIcon(QIcon(QPixmap("img/icon_cancel.png")))
         self.buttonText.setIcon(QIcon(QPixmap("img/icon_text.png")))
         self.buttonMap.setIcon(QIcon(QPixmap("img/icon_map.png")))
@@ -104,6 +106,8 @@ class TabGame(QTabWidget):
         self.buttonDrag.setText("Drag")
         self.buttonInfo.setText("Info")
         self.buttonView.setText("View Map")
+        self.buttonSelect.setText("SELECT")
+        self.buttonCapture.setText("FOTO")
 
         self.buttonMap.setCheckable(True)
         self.buttonDrop.setCheckable(True)
@@ -112,6 +116,7 @@ class TabGame(QTabWidget):
         self.buttonDrag.setCheckable(True)
         self.buttonInfo.setCheckable(True)
         self.buttonView.setCheckable(True)
+        self.buttonSelect.setCheckable(True)
 
         self.buttonSave.clicked.connect(self.eventButtonSave)
         #self.buttonLoad.clicked.connect(self.eventButtonLoad)
@@ -121,7 +126,9 @@ class TabGame(QTabWidget):
         self.buttonText.clicked.connect(self.eventButtonText)
         self.buttonDrag.clicked.connect(self.eventButtonDrag)
         self.buttonInfo.clicked.connect(self.eventButtonInfo)
+        self.buttonSelect.clicked.connect(self.eventButtonSelect)
         self.buttonView.clicked.connect(self.eventButtonView)
+        self.buttonCapture.clicked.connect(self.eventButtonCapture)
 
         hBoxTopRight.addWidget(self.buttonSave)
         #hBoxTopRight.addWidget(self.buttonLoad)
@@ -133,6 +140,8 @@ class TabGame(QTabWidget):
         hBoxBottomRight.addWidget(self.buttonDrag)
         hBoxBottomRight.addWidget(self.buttonInfo)
         hBoxBottomRight.addWidget(self.buttonView)
+        hBoxBottomRight.addWidget(self.buttonSelect)
+        hBoxBottomRight.addWidget(self.buttonCapture)
 
         vboxRight.addLayout(hBoxTopRight)
         vboxRight.addWidget(self.listWidget)
@@ -210,6 +219,23 @@ class TabGame(QTabWidget):
         self.scene.state = self.scene.STATES[5]
         self.setCursor(QCursor(Qt.ArrowCursor))
 
+    def eventButtonSelect(self):
+        self.view.setDragMode(False)
+        self.checkButton(self.buttonSelect)
+        self.scene.state = self.scene.STATES[8]
+        self.setCursor(QCursor(Qt.ArrowCursor))
+
+    def eventButtonCapture(self):
+        filename = "capture.jpg"
+        w = self.scene.rubberBand.rect().width()
+        h = self.scene.rubberBand.rect().height()
+        image = QImage(w,h, QImage.Format_RGB32)
+        image.fill(QColor(Qt.white))
+        painter = QPainter(image)
+        self.view.render(painter, source=QRect(self.scene.rubberBand.x(), self.scene.rubberBand.y(), w, h))
+        painter.end()
+        image.save(filename, "jpg")
+
     def unCheckAllButton(self):
         self.buttonDrop.setChecked(False)
         self.buttonMap.setChecked(False)
@@ -218,6 +244,7 @@ class TabGame(QTabWidget):
         self.buttonDrag.setChecked(False)
         self.buttonInfo.setChecked(False)
         self.buttonView.setChecked(False)
+        self.buttonSelect.setChecked(False)
         self.scene.state = None
 
     def checkButton(self, button):

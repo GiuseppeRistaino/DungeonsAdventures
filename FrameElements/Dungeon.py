@@ -13,7 +13,7 @@ class Dungeon(QGraphicsScene):
 
     HEIGTH_RECT = 50
     WIDTH_RECT = 50
-    STATES = ["CANC", "TEXT", "MAP", "DROP", "ROTATE", "DRAG", "INFO"]
+    STATES = ["CANC", "TEXT", "MAP", "DROP", "ROTATE", "DRAG", "INFO", "SELECT"]
 
     def __init__(self, numRow, numColumn, name=None):
         super(Dungeon, self).__init__()

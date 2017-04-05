@@ -22,7 +22,7 @@ class Server():
              #Controlliamo che il client non abbia inviato un comando di chiusura.
              if ( data == 'q' or data == 'Q'):
                  self.client_socket.close()
-                 break;
+                 break
 
 
              #Se non è un comando di chiusura facciamo qualcosa con i dati ricevuti.
@@ -34,7 +34,7 @@ class Server():
 
 
     def sendImage(self):
-        img = open("icon_cancel.png", 'rb')
+        img = open("capture.jpg", 'rb')
         #byteImage = img.read()
 
         while True:

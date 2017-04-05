@@ -40,8 +40,8 @@ class LocalServer(object):
 
 #Metodo connessione TCP/IP
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-indirizzo_server = (("192.168.0.104", 8080))
-nomefile = "img.png"
+indirizzo_server = (("192.168.0.105", 8080))
+nomefile = "capture.jpg"
 server = LocalServer(socket, indirizzo_server, nomefile)
 
 
