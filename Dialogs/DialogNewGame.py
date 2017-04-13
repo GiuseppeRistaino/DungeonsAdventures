@@ -1,3 +1,7 @@
+import sys
+import os
+from PyQt4.QtGui import *
+from PyQt4.QtCore import *
 from Frames.FrameGame import *
 
 class DialogNewGame(QDialog):

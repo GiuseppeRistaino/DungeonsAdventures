@@ -1,3 +1,5 @@
+from PyQt4.QtGui import *
+from PyQt4.QtCore import *
 from Elements.Terrain import *
 from Elements.Item import *
 from Elements.Place import *
@@ -98,6 +100,8 @@ class Rectangle(QGraphicsRectItem):
             self.text.setParentItem(self)
         if self.dungeonIcon is not None:
             self.dungeonIcon.setParentItem(self)
+
+
 
     def getListDungeons(self):
         if self.place is not None:

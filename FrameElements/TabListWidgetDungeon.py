@@ -1,4 +1,7 @@
+import sys
 import os
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
 from Elements.Terrain import *
 from Elements.Item import *
 from Elements.Npg import *
@@ -23,6 +26,7 @@ class TabListWidgetDungeon(QTabWidget):
         self.tab1UI()
         self.tab2UI()
         self.tab3UI()
+        #self.setWindowTitle("tab demo")
 
     def tab1UI(self):
         vBox = QVBoxLayout()

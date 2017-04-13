@@ -15,7 +15,7 @@ class DialogAddNpg(QDialog):
         self.parent = parent
 
         self.labelName = QLabel("Inserisci il nome dell'npg")
-        self.editName = QLineEdit()
+        self.editName = QTextEdit()
         self.buttonOk = QPushButton("OK")
         self.buttonOk.clicked.connect(self.eventClickButtonOk)
 
@@ -28,7 +28,7 @@ class DialogAddNpg(QDialog):
 
 
     def eventClickButtonOk(self):
-        npgName = self.editName.text()
+        npgName = self.editName.toPlainText()
         #controllare se il nome non è già presente nel database
         if npgName != "":
             npg = Npg(self.dungeon.itemToDraw.pixmap, x=self.rect.boundingRect().x(), y=self.rect.boundingRect().y(),

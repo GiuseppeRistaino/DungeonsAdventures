@@ -6,29 +6,29 @@ from PyQt4 import QtCore, QtGui, QtSql
 class DB_Manager():
 
     TABLE_ABILITY = "Ability"
-    ATTRIBUTE_ABILITY = ("Nome", "Descrizione", "Prova", "Azione", "Ritentare", "Speciale",
-                         "Sinergia", "Restrizioni", "Senza_addestramento")
+    ATTRIBUTE_ABILITY = ["Nome", "Descrizione", "Prova", "Azione", "Ritentare", "Speciale",
+                         "Sinergia", "Restrizioni", "Senza_addestramento"]
     TABLE_WEAPON = "Arma"
-    ATTRIBUTE_WEAPON = ("Nome", "Tipo", "Integrità", "Costo", "Danni_piccola", "Danni_media",
-                        "Critico", "Gittata", "Peso")
+    ATTRIBUTE_WEAPON = ["Nome", "Tipo", "Integrità", "Costo", "Danni_piccola", "Danni_media",
+                        "Critico", "Gittata", "Peso"]
     TABLE_MAGIC = "Incantesimo"
-    ATTRIBUTE_MAGIC = ("Nome", "Scuola", "Livello", "Temo di lancio", "Componenti", "Raggio di azione",
+    ATTRIBUTE_MAGIC = ["Nome", "Scuola", "Livello", "Temo di lancio", "Componenti", "Raggio di azione",
                         "Area", "Bersaglio", "Durata", "Tiro salvezza", "Resistenza agli incantesimi",
-                        "Descrizione", "Immagine")
+                        "Descrizione", "Immagine"]
     TABLE_INGREDEINT = "Ingrediente"
-    ATTRIBUTE_INGREDIENT = ("Nome", "Luogo", "Percentuale", "Descrizione", "Costo")
+    ATTRIBUTE_INGREDIENT = ["Nome", "Luogo", "Percentuale", "Descrizione", "Costo"]
     TABLE_MONSTER = "Mostro"
-    ATTRIBUTE_MONSTER = ("Nome", "Tipo", "Taglia", "Vita", "Iniziativa", "Velocità", "CA", "Attacco_base", "Lotta",
+    ATTRIBUTE_MONSTER = ["Nome", "Tipo", "Taglia", "Vita", "Iniziativa", "Velocità", "CA", "Attacco_base", "Lotta",
                   "Attacco", "Attacco_completo", "Spazio", "Portata", "Attacco_speciale", "Qualità_speciale",
                   "Tiri_salvezza", "Forza", "Destrezza", "Costituzione", "Intelligenza", "Saggezza", "Carisma",
                   "Abilità", "Talento", "Organizzazione", "Grado_di_sfida", "Tesoro", "Allineamento", "Modificatore_di_livello",
-                  "Descrizione", "Combattimento")
+                  "Descrizione", "Combattimento"]
     TABLE_ITEM = "Oggetti"
-    ATTRIBUTE_ITEM = ("Nome", "Resistenza", "Valore", "Peso", "Descrizione", "Immagine")
+    ATTRIBUTE_ITEM = ["Nome", "Resistenza", "Valore", "Peso", "Descrizione", "Immagine"]
     TABLE_POTION = "Pozione"
-    ATTRIBUTE_POTION = ("Nome", "Ricetta", "Tempo", "Effetto", "CD", "Valore")
+    ATTRIBUTE_POTION = ["Nome", "Ricetta", "Tempo", "Effetto", "CD", "Valore"]
     TABLE_TALENT = "Talenti"
-    ATTRIBUTE_TALENT = ("Nome", "Descrizione", "Prerequisito", "Beneficio", "Normale", "Speciale")
+    ATTRIBUTE_TALENT = ["Nome", "Descrizione", "Prerequisito", "Beneficio", "Normale", "Speciale"]
 
 
     def __init__(self, DB_Name):

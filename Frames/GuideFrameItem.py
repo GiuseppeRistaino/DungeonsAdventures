@@ -1,3 +1,4 @@
+import sys
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 from Database.DB_Manager import DB_Manager

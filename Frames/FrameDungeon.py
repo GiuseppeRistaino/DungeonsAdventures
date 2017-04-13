@@ -1,3 +1,7 @@
+import sys
+import os
+from PyQt4.QtGui import *
+from PyQt4.QtCore import *
 from FrameElements.Dungeon import Dungeon
 from FrameElements.MyGraphicsView import MyGraphicsView
 from FrameElements.TabListWidgetDungeon import *
@@ -46,12 +50,16 @@ class FrameDungeon(QFrame):
         self.buttonRotate = QPushButton()
         self.buttonDrag = QPushButton()
         self.buttonInfo = QPushButton()
+        self.buttonSelect = QPushButton()
+        self.buttonCapture = QPushButton()
         self.buttonCancel.setIcon(QIcon(QPixmap("img/icon_cancel.png")))
         self.buttonText.setIcon(QIcon(QPixmap("img/icon_text.png")))
         self.buttonDrop.setIcon(QIcon(QPixmap("img/icon_drop.png")))
         self.buttonRotate.setIcon(QIcon(QPixmap("img/icon_rotate.png")))
         self.buttonDrag.setText("Drag")
         self.buttonInfo.setText("Info")
+        self.buttonSelect.setText("SELECT")
+        self.buttonCapture.setText("FOTO")
 
         self.buttonDrop.setCheckable(True)
         self.buttonCancel.setCheckable(True)
@@ -59,13 +67,18 @@ class FrameDungeon(QFrame):
         self.buttonRotate.setCheckable(True)
         self.buttonDrag.setCheckable(True)
         self.buttonInfo.setCheckable(True)
+        self.buttonSelect.setCheckable(True)
 
+        # self.buttonSave.clicked.connect(self.eventButtonSave)
+        # self.buttonLoad.clicked.connect(self.eventButtonLoad)
         self.buttonDrop.clicked.connect(self.eventButtonDrop)
         self.buttonCancel.clicked.connect(self.eventButtonCanc)
         self.buttonText.clicked.connect(self.eventButtonText)
         self.buttonRotate.clicked.connect(self.eventButtonRotate)
         self.buttonDrag.clicked.connect(self.eventButtonDrag)
         self.buttonInfo.clicked.connect(self.eventButtonInfo)
+        self.buttonSelect.clicked.connect(self.eventButtonSelect)
+        self.buttonCapture.clicked.connect(self.eventButtonCapture)
 
         hBoxButtons = QHBoxLayout()
         hBoxButtons.addWidget(self.buttonCancel)
@@ -74,6 +87,8 @@ class FrameDungeon(QFrame):
         hBoxButtons.addWidget(self.buttonRotate)
         hBoxButtons.addWidget(self.buttonDrag)
         hBoxButtons.addWidget(self.buttonInfo)
+        hBoxButtons.addWidget(self.buttonSelect)
+        hBoxButtons.addWidget(self.buttonCapture)
 
         vBox.addLayout(hBoxButtons)
         layout.addLayout(vBox)
@@ -122,6 +137,23 @@ class FrameDungeon(QFrame):
         self.dungeon.state = self.dungeon.STATES[6]
         self.setCursor(QCursor(Qt.ArrowCursor))
 
+    def eventButtonSelect(self):
+        self.view.setDragMode(False)
+        self.checkButton(self.buttonSelect)
+        self.dungeon.state = self.dungeon.STATES[7]
+        self.setCursor(QCursor(Qt.ArrowCursor))
+
+    def eventButtonCapture(self):
+        filename = "capture.jpg"
+        w = self.view.rubberBand.rect().width()
+        h = self.view.rubberBand.rect().height()
+        image = QImage(w,h, QImage.Format_RGB32)
+        image.fill(QColor(Qt.white))
+        painter = QPainter(image)
+        self.view.render(painter, source=QRect(self.view.rubberBand.x(), self.view.rubberBand.y(), w, h))
+        painter.end()
+        image.save(filename, "jpg")
+
     def unCheckAllButton(self):
         self.buttonDrop.setChecked(False)
         self.buttonText.setChecked(False)
@@ -129,6 +161,7 @@ class FrameDungeon(QFrame):
         self.buttonRotate.setChecked(False)
         self.buttonDrag.setChecked(False)
         self.buttonInfo.setChecked(False)
+        self.buttonSelect.setChecked(False)
         self.dungeon.state = None
 
     def checkButton(self, button):

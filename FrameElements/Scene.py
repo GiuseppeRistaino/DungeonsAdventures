@@ -1,3 +1,8 @@
+import sys
+import os
+from PyQt4.QtGui import *
+from PyQt4.QtCore import *
+
 from Dialogs.DialogAddNpg import DialogAddNpg
 from Elements.Rectangle import *
 from Dialogs.DialogTextOnMap import *
@@ -9,7 +14,7 @@ class Scene(QGraphicsScene):
 
     HEIGTH_RECT = 50
     WIDTH_RECT = 50
-    STATES = ("CANC", "TEXT", "MAP", "DROP", "ROTATE", "VIEW", "DRAG", "INFO")
+    STATES = ("CANC", "TEXT", "MAP", "DROP", "ROTATE", "VIEW", "DRAG", "INFO", "SELECT", "SOCKET")
 
     def __init__(self, numRow, numColumn, name=None, places=None):
         super(Scene, self).__init__()
@@ -22,6 +27,7 @@ class Scene(QGraphicsScene):
         self.state = None
         self.itemToDrop = None
         self.npgs = []
+
         self.drawChess(self.numRow, self.numColumn)
 
 
@@ -90,7 +96,9 @@ class Scene(QGraphicsScene):
                     self.msg.setWindowTitle("Info Npg")
                     self.msg.show()
 
+
     def manageStateEvent(self, event, rect=None):
+        coord = event.scenePos()
         if event.buttons() == Qt.RightButton:
             if rect is not None:
                 #Disegna
@@ -101,6 +109,14 @@ class Scene(QGraphicsScene):
                 if rect is not None:
                     # Cancella
                     rect.removeItems()
+                item = self.itemAt(coord.x(), coord.y())
+                if isinstance(item, Npg):
+                    for npg in self.npgs:
+                        if npg == item:
+                            self.npgs.remove(npg)
+                            self.removeItem(npg)
+
+
 
 
     def isPointOnItemRect(self, x, y):
